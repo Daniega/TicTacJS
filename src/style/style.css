@@ -1,0 +1,25 @@
+body {
+    background-color: #C2E6FF
+}
+
+.App {
+	flex: 1;
+}
+
+.App-header {
+    align-content: center;
+    height: 150px;
+    padding: 20px;
+    color: black;
+}
+
+h1 {
+    text-align: center;
+    font-family:'Segoe UI Light';
+}
+
+.Head-logo {
+    display: block;
+    margin: auto;       
+    height: 100px;
+}
