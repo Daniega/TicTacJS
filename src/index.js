@@ -41,7 +41,7 @@ class App extends Component {
         else {
             return (<div>
                 <Header  />
-                <Board user = {this.state.user} socket = {this.socket}/>
+                <Board user={this.state.user} socket={this.socket}/>
             </div>);
         }
 
