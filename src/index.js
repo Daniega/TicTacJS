@@ -10,7 +10,8 @@ import waitGif from './logos/wait.gif';
 class App extends Component {
     constructor(props) {
         super(props);
-        this.state = {play: false , user:0};
+		this.state = {play: false , user:0};
+		this.socket = io('https://tictacdani.herokuapp.com/', {secure: true});
 	}
 
 	componentDidMount() {
