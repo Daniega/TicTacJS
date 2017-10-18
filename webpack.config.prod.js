@@ -5,7 +5,7 @@ config.plugins.push(
     new webpack.DefinePlugin({
         "process.env": {
             "NODE_ENV": JSON.stringify("production"),
-            'API_HOST': JSON.stringify('https://tic-tac-toe-illya.herokuapp.com/')
+            'API_HOST': JSON.stringify('https://tictacdani.herokuapp.com/')
 
         }
     })
