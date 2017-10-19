@@ -1,20 +1,21 @@
-import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
-import './style/style.css';
-import io from 'socket.io-client';
+import '../public/styles.css';
 import Header from './components/header';
-import Board from './components/board'
-import waitGif from './logos/wait.gif';
+import Board from './components/board';
+import io from 'socket.io-client';
+import React, {Component} from 'react';
+import waitGif from '../public/gifs/wait.gif';
+import Chat from './components/chat';
 
 
 class App extends Component {
     constructor(props) {
         super(props);
-		this.state = {play: false , user:0};
-		this.socket = io('https://tictacdani.herokuapp.com/', {secure: true});
-	}
+        this.state = {play: true , user:0};
+        this.socket = io('https://tictacdani.herokuapp.com/', {secure: true});
 
-	componentDidMount() {
+    }
+    componentDidMount() {
         this.socket.on('play', () => { // two users in
             this.setState({play: true});
         });
@@ -24,24 +25,25 @@ class App extends Component {
         });
 
         this.socket.on('disconnected', (msg) => { //stop game if user disconnected
-            this.setState({play: false});
+            this.setState({play: true});
         });
     }
 
-	render() {
+        render() {
         if (!this.state.play) {
             return (<div className="App">
                 <Header />
                 <div className="container">
-                    <img  className="img" src={waitGif} alt="Waiting for opponent to join"/>
-                    <h2>Waiting for opponent to join</h2>
+                    <h3>Waiting for opponent</h3>
+                    <img  className="img" src={waitGif} alt="Waiting for opponent"/>
                 </div>
             </div>);
         }
         else {
             return (<div>
-                <Header  />
-                <Board user={this.state.user} socket={this.socket}/>
+                <Header />
+                <Board user = {this.state.user} socket = {this.socket}/>
+                <Chat user = {this.state.user} socket = {this.socket}/>
             </div>);
         }
 
@@ -49,3 +51,5 @@ class App extends Component {
 }
 
 ReactDOM.render(<App />, document.getElementById('app'));
+
+
