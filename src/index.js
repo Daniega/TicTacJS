@@ -11,7 +11,7 @@ import Chat from './components/chat';
 class App extends Component {
     constructor(props) {
         super(props);
-        this.state = {play: true , user:0};
+        this.state = {play: false , user:0};
         this.socket = io('https://tictacdani.herokuapp.com/', {secure: true});
 
     }
@@ -25,7 +25,7 @@ class App extends Component {
         });
 
         this.socket.on('disconnected', (msg) => { //stop game if user disconnected
-            this.setState({play: true});
+            this.setState({play: false});
         });
     }
 
