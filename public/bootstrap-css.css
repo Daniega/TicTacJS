@@ -3521,32 +3521,33 @@ a.btn.disabled, fieldset[disabled] a.btn {
 
 .btn-success {
     color: #fff;
-    background-color: #5cb85c;
-    border-color: #4cae4c
+    box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.2);
+    background-color: #2656F5;
+    border-color: #2656F5;
 }
 
 .btn-success.focus, .btn-success:focus {
     color: #fff;
-    background-color: #449d44;
-    border-color: #255625
+    background-color: #2656F5;
+    border-color: #2656F5
 }
 
 .btn-success:hover {
     color: #fff;
-    background-color: #449d44;
-    border-color: #398439
+    background-color: #2656F5;
+    border-color: #2656F5
 }
 
 .btn-success.active, .btn-success:active, .open > .dropdown-toggle.btn-success {
     color: #fff;
-    background-color: #449d44;
-    border-color: #398439
+    background-color: #2656F5;
+    border-color: #2656F5
 }
 
 .btn-success.active.focus, .btn-success.active:focus, .btn-success.active:hover, .btn-success:active.focus, .btn-success:active:focus, .btn-success:active:hover, .open > .dropdown-toggle.btn-success.focus, .open > .dropdown-toggle.btn-success:focus, .open > .dropdown-toggle.btn-success:hover {
     color: #fff;
-    background-color: #398439;
-    border-color: #255625
+    background-color: #2656F5;
+    border-color: #2656F5
 }
 
 .btn-success.active, .btn-success:active, .open > .dropdown-toggle.btn-success {
@@ -3554,16 +3555,17 @@ a.btn.disabled, fieldset[disabled] a.btn {
 }
 
 .btn-success.disabled.focus, .btn-success.disabled:focus, .btn-success.disabled:hover, .btn-success[disabled].focus, .btn-success[disabled]:focus, .btn-success[disabled]:hover, fieldset[disabled] .btn-success.focus, fieldset[disabled] .btn-success:focus, fieldset[disabled] .btn-success:hover {
-    background-color: #5cb85c;
-    border-color: #4cae4c
+    background-color: #2656F5;
+    border-color: #2656F5
 }
 
 .btn-success .badge {
-    color: #5cb85c;
+    color: #2656F5;
     background-color: #fff
 }
 
 .btn-info {
+    font: 'Segoe UI'
     color: #fff;
     background-color: #5bc0de;
     border-color: #46b8da

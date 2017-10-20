@@ -31,7 +31,7 @@ export default class Chat extends Component {
     openBox = () => { //open chat box
         this.setState({box: true, btn: false, notification: false});
     };
-    closeBox = () => { //close cha tbox
+    closeBox = () => { //close chat tbox
         this.setState({box: false, btn: true, messageAlert: "Click to chat"});
     };
     sendMessage = (event) => { //send message function
@@ -63,7 +63,7 @@ export default class Chat extends Component {
         });
         if (this.state.box) {
             box = <div className="chatBox">
-                <div className="chatHead"><Faclose className="close" onClick={this.closeBox}/></div>
+                <div className="chatHead">Chat<Faclose className="close" onClick={this.closeBox}/></div>
                 <div className="conversation">{conversation}</div>
                 <form onSubmit={this.sendMessage}>
                     <input type="text" className="input" placeholder={placeHolder} onChange={this.onInputChange}
@@ -81,7 +81,6 @@ export default class Chat extends Component {
         }
         return (
             <div>
-
                 {box}
                 {btn}
             </div>

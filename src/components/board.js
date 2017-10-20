@@ -102,7 +102,7 @@ class Board extends Component {
         let btn = null;
 
         if (this.state.resetGame) {
-            btn = <button className="btn btn-success" onClick={this.startAnotherGame.bind(null)}>Rematch</button>
+            btn = <button className="btn btn-primary" onClick={this.startAnotherGame.bind(null)}>Rematch</button>
         }
         else {
             btn = null;
