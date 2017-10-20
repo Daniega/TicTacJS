@@ -7,6 +7,7 @@ const path = require('path');
 
 
 let users = [];
+var players = []; 
 
 if(process.env.NODE_ENV !== 'production') {
     const webpackDevMiddleware = require('webpack-dev-middleware');
@@ -29,44 +30,59 @@ app.get('/', function (req, res) {
 
 
 io.on('connection', (socket) => {
-    
-	this.rowsCounter = [0, 0, 0, 0];
-	this.colsCounter = [0, 0, 0, 0];
-	this.leftDiagonalCounter = 0;
-	this.rightDiagonalCounter = 0;
 
     users.push(socket.id);
 
+    function resetAllPlayers(){ //reset data of all players in room (init)
+        for (var i = 0 ; i < io.engine.clientsCount ; i++){
+            players.push({
+                playerID: users[i],
+                rowsCounter: [0, 0, 0, 0],
+                colsCounter: [0, 0, 0, 0],
+                leftDiagonalCounter: 0,
+                rightDiagonalCounter: 0
+            });
+        }
+    }
+         
+
     if (io.engine.clientsCount < 2) {
         io.to(socket.id).emit('hey', 1); //first user connected
-
     }
     else if (io.engine.clientsCount === 2) {
         io.to(users[0]).emit('hey', 1); //if a user disconnects, the second one becomes the first
         io.emit('play'); //two users in, can start game
+        resetAllPlayers();        
+        io.to(users[0]).emit('getPlayerId', users[0]);
+        io.to(users[1]).emit('getPlayerId', users[1]);
     }
 
-    function checkWin(i, j, tempBoard){ //function to check if player won
-		this.rowsCounter[i]++;
-		this.colsCounter[j]++;
+    function checkWin(tempBoard, i, j, playerID){ //function to check if player won
 
-		if (i == j) {
-            //left diagonal
-            this.leftDiagonalCounter++;
+        for (var k = 0 ; k <= 1 ; k++){
+            if (players[k].playerID == playerID){
+                console.log('blablabla');
+                players[k].rowsCounter[i]++;
+                players[k].colsCounter[j]++;
+                break;                
+            }
         }
-        else if (i + j == 3) {
-            //right diagonal
-            this.rightDiagonalCounter++;
-		}
-		
-		if (this.rowsCounter[i] == 4 || this.colsCounter[j] == 4 || this.leftDiagonalCounter == 4 || this.rightDiagonalCounter == 4){
-			
-			socket.broadcast.emit('lost', board); // broadcast to second player that he lost
-			socket.emit('win', board); //tell the move maker that he won
-			}
+
+		if (i == j) { //left diagonal
+            players[k].leftDiagonalCounter++;
+        }
+        else if (i + j == 3) { //right diagonal
+            players[k].rightDiagonalCounter++;
+        }
+        
+        //check if player won
+		if (players[k].rowsCounter[i] == 4 || players[k].colsCounter[j] == 4 || players[k].leftDiagonalCounter == 4 || players[k].rightDiagonalCounter == 4){
+            return true;
+            }
+        return false;
 	}
 
-	function checkDraw(tempBoard){
+	function checkDraw(tempBoard){ //check if the match is a draw
 		for (let i in tempBoard){
 			for (let j in tempBoard[i]){
 				if (tempBoard[i][j] == ""){
@@ -77,10 +93,17 @@ io.on('connection', (socket) => {
 		return true;
 	}
 
-	socket.on('move', (board, i, j) => {// after move check if user won/draw. if not, broadcast board to second player
-		checkWin(i, j, board)
-		if(checkDraw(board)){
-			io.emit('draw', board);			
+	socket.on('move', (board, i, j, playerID) => {// after move check if user won/draw. if not, broadcast board to second player
+        if(checkWin(board, i, j, playerID)){
+            socket.broadcast.emit('lost', board); // broadcast to second player that he lost
+            socket.emit('winner', board) //tell the move maker that he won
+            players = [];
+            resetAllPlayers();
+        }
+		else if(checkDraw(board)){
+            io.emit('draw', board);
+            players = [];
+            resetAllPlayers();		
 		}
 		else{
 			socket.broadcast.emit('getBoard', board);			
@@ -101,6 +124,8 @@ io.on('connection', (socket) => {
     });
 
     socket.on('playAgain', (board) => { // start another game
+        players = [];
+        resetAllPlayers();
         socket.broadcast.emit('playAgain', board);
 
 
@@ -114,6 +139,8 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         users.splice(users.indexOf(socket.id), 1); // in case of disconnect
         io.emit('disconnected', 'disconnected');
+        players = []
+        resetAllPlayers();
 
     });
 });

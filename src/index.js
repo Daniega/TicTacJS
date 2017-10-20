@@ -12,12 +12,13 @@ class App extends Component {
     constructor(props) {
         super(props);
         this.state = {play: false , user:0};
-        this.socket = io('https://tictacdani.herokuapp.com/', {secure: true});
+        this.socket = io('http://localhost:3000/', {secure: true});
 
     }
     componentDidMount() {
         this.socket.on('play', () => { // two users in
             this.setState({play: true});
+            console.log('ok, 2 players in');
         });
 
         this.socket.on('hey', (msg) => { //send id to first user
@@ -35,8 +36,8 @@ class App extends Component {
                 <Header />
                 <div className="container">
                     <h3>Waiting for opponent</h3>
-                    <img  className="img" src={waitGif} alt="Waiting for opponent"/>
                 </div>
+                <img className="img" src={waitGif} />
             </div>);
         }
         else {

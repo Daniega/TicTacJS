@@ -22,19 +22,19 @@ export default class Chat extends Component {
     }
 
     componentDidMount() {
-        this.socket.on('message', (conversation) => { // got message
+        this.socket.on('message', (conversation) => { //user gets new message
             this.setState({conversation: conversation, messageAlert: "New message", notification: true});
         });
 
     }
 
-    openBox = () => {
+    openBox = () => { //open chat box
         this.setState({box: true, btn: false, notification: false});
     };
-    closeBox = () => {
+    closeBox = () => { //close cha tbox
         this.setState({box: false, btn: true, messageAlert: "Click to chat"});
     };
-    sendMessage = (event) => {
+    sendMessage = (event) => { //send message function
         event.preventDefault();
         let message = this.state.text;
         this.setState({text: ""});

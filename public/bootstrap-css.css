@@ -259,11 +259,11 @@ td, th {
     }
 
     .table td, .table th {
-        background-color: #fff !important
+        background-color: #FF3A3A !important
     }
 
     .table-bordered td, .table-bordered th {
-        border: 1px solid #ddd !important
+        border: 2px solid #9C9C9C !important
     }
 }
 
@@ -2754,11 +2754,11 @@ th {
 }
 
 .table-bordered {
-    border: 1px solid #ddd
+    border: 1px solid #BDBDBD
 }
 
 .table-bordered > tbody > tr > td, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > td, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > thead > tr > th {
-    border: 1px solid #ddd
+    border: 1px solid #B6B6B6
 }
 
 .table-bordered > thead > tr > td, .table-bordered > thead > tr > th {
