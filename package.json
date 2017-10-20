@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "start": "node server.js",
-    "dev": "NODE_ENV=development webpack-dev-server --hot --inline",
-    "build": "NODE_ENV=production webpack --config ./webpack.config.prod.js"
+    "start": "node ./server/server.js",
+    "dev": "SET NODE_ENV=development webpack-dev-server --hot --inline",
+    "build": "SET NODE_ENV=production webpack --config ./webpack.config.prod.js"
   },
   "author": "",
   "license": "ISC",

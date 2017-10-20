@@ -20,10 +20,10 @@ if(process.env.NODE_ENV !== 'production') {
     app.use(webpackHotMiddleware(compiler));
 }
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, '../public')));
 
 app.get('/', function (req, res) {
-    res.sendFile(path.join(__dirname, './public/index.html'));
+    res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 
 
@@ -61,7 +61,6 @@ io.on('connection', (socket) => {
 
         for (var k = 0 ; k <= 1 ; k++){
             if (players[k].playerID == playerID){
-                console.log('blablabla');
                 players[k].rowsCounter[i]++;
                 players[k].colsCounter[j]++;
                 break;                
