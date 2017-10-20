@@ -3565,7 +3565,6 @@ a.btn.disabled, fieldset[disabled] a.btn {
 }
 
 .btn-info {
-    font: 'Segoe UI'
     color: #fff;
     background-color: #5bc0de;
     border-color: #46b8da
