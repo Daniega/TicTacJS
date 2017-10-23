@@ -1,34 +1,32 @@
 import React, {Component} from 'react';
-import '../style/style.css';
-
+import '../../public/styles.css';
 
 class Board extends Component {
 
-	constructor(props) { /*Board init*/
-		super(props);
-		this.socket = props.socket;
-		this.turn = 1;
-		this.user = props.user;
-		this.board = [["","","",""],["","","",""],["","","",""],["","","",""]];
-		this.state = {board: this.board, turnMessage: "Opponent's turn", reMatch: false};
-		this.rowsCounter = [0, 0, 0, 0];
-        this.colsCounter = [0, 0, 0, 0];
-        this.leftDiagonalCounter = 0;
-        this.rightDiagonalCounter = 0;
-
+    constructor(props) {
+        super(props);
+        this.socket = props.socket;
+        this.turn = 1;
+        this.user = props.user;
+        this.board = [["", "", "", ""], ["", "", "", ""], ["", "", "", ""], ["", "", "", ""]];
+        this.state = {board: this.board, turn: "Waiting for opponent's turn", resetGame: false};
+        this.playerId = null;
     }
-    
-    componentDidMount() { //Socket messages
 
+    componentDidMount() {
         if (this.user == 1) { //first user to begin
-            this.setState({turn: "Your turn"});
+            this.setState({turn: "It's Your turn"});
         }
 
         this.socket.on('getBoard', (board) => { // update board after move
             this.setState({board});
             this.turn = this.user;
-            this.setState({turn: "Your turn"});
+            this.setState({turn: "it's Your turn"});
 
+        });
+
+        this.socket.on('changeTurn', (board) => {
+            this.setState(this.turn = !this.user)
         });
 
         this.socket.on('lost', (board) => { // you lost
@@ -38,118 +36,73 @@ class Board extends Component {
 
         });
 
-        this.socket.on('changeTurn', (board) => { //change users turn
-            this.turn = !this.user;
+        this.socket.on('winner', (board) => {
+            this.setState({turn: "You win"});
+            this.playAgain();            
         });
 
-        this.socket.on('win', (board) => { //you win
+        this.socket.on('draw', (board) => { // you lost
             this.setState({board});
-            this.setState({turn: 'You win!'});
-            this.playAgain();
-        });
-
-        this.socket.on('draw', (board) => { // draw
-            this.setState({board});
-            this.setState({turn: "draw!"});
+            this.setState({turn: "Draw"});
             this.playAgain();
 
         });
 
         this.socket.on('playAgain', (board) => { // opponent wants rematch
             this.setState({board});
-            this.resetCounters();
             this.setState({turn: "Wait for opponents turn"});
-            this.setState({playAgain: false});
+            this.setState({resetGame: false});
 
+        });
+
+        this.socket.on('getPlayerId', (playerId) => {
+            this.playerId = playerId;
+            console.log("Inside player id : " + this.playerId)
         });
     }
 
-
-
-	resetBoard = () => { /*Reset board if user wants a rematch*/
-        this.rowsCounter = [0, 0, 0, 0];
-        this.colsCounter = [0, 0, 0, 0];
-        this.leftDiagonalCounter = 0;
-        this.rightDiagonalCounter = 0;
-        this.board = [["", "", "", ""], ["", "", "", ""], ["", "", "", ""], ["", "", "", ""]];
-        this.setState({board: this.board});
-        console.log(this.board);
-	};
-	
-	rematchBoard = () => { /*Reset states board if rematch*/
-		this.setState({reMatch: false});
-		this.turn = this.user;
-		this.setState({turnMessage: "It's your turn"});
-		this.resetBoard();
-		this.socket.emit('rematchState', this.board);
-	};
-
-	rematchState = () => { /*Show rematch Button*/
-		this.setState({reMatch: true});
-    };
-    
-    checkWin = (i, j, tempBoard) => {
-        this.rowsCounter[i]++;
-        this.colsCounter[j]++;
-        if (i == j) {
-            // top left diagonal
-            this.leftDiagonalCounter++;
-        }
-        else if (i + j == 3) {
-            // top right diagonal
-            this.rightDiagonalCounter++;
-        }
-
-        if (this.rowsCounter[i] == 4 || this.colsCounter[j] == 4 || this.leftDiagonalCounter == 4
-            || this.rightDiagonalCounter == 4) { // if any of counters is 4 then bingo
-            this.socket.emit('win', tempBoard);
-            this.turn = !this.user; // switch turns
-            this.setState({turn: "You win"});
-            this.playAgain(); // show button
-            return true;
-        }
-        if (this.checkDraw(tempBoard)) {
-            return true
-        }
-        return false;
-
-    };
-
-	handleClick = (i,j) => {
-		if (this.state.board[i][j] === "" && this.turn === this.user) {
+    handleClick = (i, j) => {
+        if (this.state.board[i][j] == "" && this.turn == this.user) {
             let tempBoard = this.state.board; // lets define temp to manipulate our board
-            if (!this.user === 1) {
-                tempBoard[i][j] = "x";
+            if (!this.user == 1) {
+                tempBoard[i][j] = "X";
             }
             else {
-                tempBoard[i][j] = "o";
+                tempBoard[i][j] = "O";
             }
             this.setState({board: tempBoard});
-            this.socket.emit('move', tempBoard, i, j); // emit updated board to server which will send it to other user
-            this.setState({turn: "Opponent's turn"});
-            
-
+            this.socket.emit('move', tempBoard, i, j, this.playerId); // send updated board to server which will send it to other user
+            this.turn = !this.user; // switch turns
+            this.setState({turn: "Wait for opponents turn"});
         }
-	};
+    };
 
+    playAgain = () => {
+        this.setState({resetGame: true}); // show button
+    };
 
+    startAnotherGame = () => {
+        this.setState({resetGame: false});
+        this.turn = this.user;
+        this.setState({turn: "Your turn"});
+        this.board = [["", "", "", ""], ["", "", "", ""], ["", "", "", ""], ["", "", "", ""]];
+        this.setState({board: this.board});
+        this.socket.emit('playAgain', this.board);
 
+    };
 
-
-
-
-	render() {
+    render() {
         // build table
         let tableBoard = this.state.board.map((row, index) => {
             let cols = row.map((col, colIndex) => {
                 return (<td key={[index, colIndex]} onClick={this.handleClick.bind(null, index, colIndex)}>{this.state.board[index][colIndex]}</td>);
             });
             return (<tr key={index}>{cols}</tr>);
-		});
-		
+        });
         let btn = null;
-        if (this.state.reMatch) {
-            btn = <button className="btn btn-success" onClick={this.rematchBoard.bind(null)}>Rematch</button>
+
+        if (this.state.resetGame) {
+            btn = <button className="btn btn-primary" onClick={this.startAnotherGame.bind(null)}>Rematch</button>
         }
         else {
             btn = null;
@@ -157,14 +110,16 @@ class Board extends Component {
 
         return (
             <div className="App">
+                <div className="boardhead">
+                        <h3>{this.state.turn}</h3>
+                        {btn}
+                </div>
                 <div className="container">
-                    <h2>{this.state.turn}</h2>
                     <table className=" card table-bordered table-responsive">
                         <tbody>
                         {tableBoard}
                         </tbody>
                     </table>
-					{btn}
                 </div>
             </div>
         );
