@@ -28,7 +28,7 @@
     "express": "^4.15.3",
     "react-icons": "^2.2.5",
     "redux": "^3.7.2",
-    "socket.io": "^2.0.3",
+    "socket.io": "^2.4.0",
     "react": "15.5.4",
     "react-dom": "15.5.4",
     "webpack": "^3.4.1"
